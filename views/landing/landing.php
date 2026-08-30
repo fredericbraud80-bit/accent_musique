@@ -72,7 +72,7 @@
         <div class="section-header">
             <span class="section-badge">🏪 Magasin & Atelier</span>
             <h2>Le Magasin Accent Musique</h2>
-            <p class="section-subtitle">Découvrez notre lieu de partage musical à Osséja : cours, studio, atelier et boutique.</p>
+            <p class="section-subtitle">Découvrez notre association de partage musical à Osséja : cours, studio, atelier et boutique.</p>
         </div>
 
         <!-- CARROUSEL DE PHOTOS DU MAGASIN -->
