@@ -84,7 +84,7 @@
                     <div class="carousel-slide">
                         <div class="slide-photo-card">
                             <div class="slide-photo-media">
-                                <img src="<?= BASE_URL ?>/assets/images/hero.jpg" alt="Le Magasin Accent Musique" class="slide-photo-img">
+                                <img src="<?= BASE_URL ?>/assets/images/cours.jpg" alt="Le Magasin Accent Musique" class="slide-photo-img">
                                 <div class="slide-photo-gradient"></div>
                                 <span class="slide-photo-pill">🏪 Magasin & Espace Accueil</span>
                             </div>
@@ -150,7 +150,7 @@
                     <div class="carousel-slide">
                         <div class="slide-photo-card">
                             <div class="slide-photo-media">
-                                <img src="<?= BASE_URL ?>/assets/images/atelier.JPG" alt="Réparations & Réglages" class="slide-photo-img">
+                                <img src="<?= BASE_URL ?>/assets/images/atelier1.JPG" alt="Réparations & Réglages" class="slide-photo-img">
                                 <div class="slide-photo-gradient"></div>
                                 <span class="slide-photo-pill">🛠️ Atelier de Réparations & Réglages</span>
                             </div>
