@@ -1,0 +1,100 @@
+<?php
+namespace Controllers;
+
+use Core\Controller;
+use Core\Session;
+use Models\File;
+
+class DownloadController extends Controller {
+    private function requireAuth(): void {
+        if (!Session::has('user_id')) {
+            http_response_code(403);
+            throw new \RuntimeException('Accès refusé. Authentification requise.');
+        }
+    }
+
+    private function resolveFile(int $fileId): ?array {
+        $fileModel = new File();
+        $file = $fileModel->findById($fileId);
+
+        if (!$file) {
+            return null;
+        }
+
+        $baseDir = realpath(STORAGE_PATH);
+        $fullPath = realpath(STORAGE_PATH . $file['stored_name']);
+
+        if ($baseDir === false || $fullPath === false) {
+            return null;
+        }
+
+        $baseDir = rtrim($baseDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if (strncmp($fullPath, $baseDir, strlen($baseDir)) !== 0) {
+            return null;
+        }
+
+        $allowedMimeTypes = [
+            'application/pdf',
+            'image/jpeg',
+            'image/png',
+            'audio/mpeg',
+            'video/mp4'
+        ];
+
+        $mimeType = mime_content_type($fullPath);
+        if (!is_string($mimeType) || !in_array($mimeType, $allowedMimeTypes, true)) {
+            return null;
+        }
+
+        $file['path'] = $fullPath;
+        $file['mime_type'] = $mimeType;
+        return $file;
+    }
+
+    public function download(int $fileId): void {
+        $this->requireAuth();
+
+        $file = $this->resolveFile($fileId);
+        if (!$file) {
+            http_response_code(404);
+            throw new \RuntimeException('Fichier introuvable.');
+        }
+
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $file['mime_type']);
+        header('Content-Disposition: attachment; filename="' . basename($file['original_name']) . '"');
+        header('Content-Length: ' . filesize($file['path']));
+        header('X-Content-Type-Options: nosniff');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Pragma: no-cache');
+
+        readfile($file['path']);
+        exit;
+    }
+
+    public function preview(int $fileId): void {
+        $this->requireAuth();
+
+        $file = $this->resolveFile($fileId);
+        if (!$file) {
+            http_response_code(404);
+            throw new \RuntimeException('Fichier introuvable.');
+        }
+
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        header('Content-Type: ' . $file['mime_type']);
+        header('Content-Disposition: inline; filename="' . basename($file['original_name']) . '"');
+        header('Content-Length: ' . filesize($file['path']));
+        header('X-Content-Type-Options: nosniff');
+
+        readfile($file['path']);
+        exit;
+    }
+}
