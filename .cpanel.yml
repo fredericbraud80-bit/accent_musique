@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/brfr7541/accentmusique.fr
+    - /bin/cp -R * $DEPLOYPATH
