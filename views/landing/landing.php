@@ -72,7 +72,7 @@
         <div class="section-header">
             <span class="section-badge">🏪 Magasin & Atelier</span>
             <h2>Le Magasin Accent Musique</h2>
-            <p class="section-subtitle">Découvrez notre association de partage musical à Osséja : cours, studio, atelier et boutique.</p>
+            <p class="section-subtitle">Découvrez notre lieu de partage musical à Osséja : cours, studio, atelier et boutique.</p>
         </div>
 
         <!-- CARROUSEL DE PHOTOS DU MAGASIN -->
@@ -150,7 +150,7 @@
                     <div class="carousel-slide">
                         <div class="slide-photo-card">
                             <div class="slide-photo-media">
-                                <img src="<?= BASE_URL ?>/assets/images/atelier1.JPG" alt="Réparations & Réglages" class="slide-photo-img">
+                                <img src="<?= BASE_URL ?>/assets/images/atelier.jpg" alt="Réparations & Réglages" class="slide-photo-img">
                                 <div class="slide-photo-gradient"></div>
                                 <span class="slide-photo-pill">🛠️ Atelier de Réparations & Réglages</span>
                             </div>
@@ -545,6 +545,10 @@
     </footer>
 
     <script src="<?= BASE_URL ?>/assets/js/landing.js"></script>
+
+</body>
+
+</html>c="<?= BASE_URL ?>/assets/js/landing.js"></script>
 
 </body>
 
