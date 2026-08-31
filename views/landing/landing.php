@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accent Musique – Cours de Musique, Studio, Réparations & Cours en Ligne</title>
-    <meta name="description" content="Accent Musique : cours de guitare, basse, batterie, studio d'enregistrement, lutherie & réparations, et plateforme de cours de musique en ligne.">
+    <meta name="description" content="Accent Musique : cours de guitare, studio d'enregistrement, réparations, cours de musique en ligne.">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="<?= BASE_URL ?>/assets/images/favicon.svg">
@@ -281,7 +281,7 @@
         </div>
     </section>
 
-    <!-- SECTION TARIFS RECAPITULATIF (MODERNE ET SIMPLE) -->
+    <!-- SECTION TARIFS RECAPITULATIF -->
     <section id="tarifs" class="section section-tarifs">
         <div class="section-header">
             <span class="section-badge">🏷️ Formules & Services</span>
@@ -540,7 +540,7 @@
                 <span>•</span>
                 <a href="<?= BASE_URL ?>/cgu">Conditions Générales d'Utilisation</a>
             </div>
-            <p class="footer-subtext">Espace d'apprentissage & de création musicale sécurisé.</p>
+            <p class="footer-subtext">Espace d'apprentissage & de création musicale.</p>
         </div>
     </footer>
 
@@ -548,8 +548,6 @@
 
 </body>
 
-</html>c="<?= BASE_URL ?>/assets/js/landing.js"></script>
-
-</body>
-
 </html>
+
+
