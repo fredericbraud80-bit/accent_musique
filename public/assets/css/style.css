@@ -39,10 +39,17 @@
 /* ==========================================================================
    2. BASE / RESET
    ========================================================================== */
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  font-size: 17.5px;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -112,6 +119,7 @@ a:hover {
 .brand-sub {
   color: var(--text-main);
 }
+
 .nav-user-info {
   position: relative;
   display: flex;
@@ -129,20 +137,20 @@ a:hover {
 .footer {
   background-color: #020617;
   border-top: 1px solid var(--border-color);
-    padding: 20px 0;
-    text-align: center;
-    margin-top: 40px;
-    
+  padding: 20px 0;
+  text-align: center;
+  margin-top: 40px;
+
 }
 
 .footer-nav a {
-    color: #ccc;
-    margin: 0 10px;
-    text-decoration: none;
+  color: #ccc;
+  margin: 0 10px;
+  text-decoration: none;
 }
 
 .footer-nav a:hover {
-    color: #ffab10;
+  color: #ffab10;
 }
 
 
