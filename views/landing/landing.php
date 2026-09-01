@@ -410,7 +410,7 @@
                     <?php if (\Core\Session::has('user_id')): ?>
                         <a href="<?= BASE_URL ?>/accueil" class="btn btn-outline btn-block">Accéder à mes cours</a>
                     <?php else: ?>
-                        <a href="<?= BASE_URL ?>/register" class="btn btn-outline btn-block">Demander un accès</a>
+                        <a href="<?= BASE_URL ?>/register" class="btn btn-outline btn-block">Application accessible dès le 01/11/2026</a>
                     <?php endif; ?>
                 </div>
             </div>
