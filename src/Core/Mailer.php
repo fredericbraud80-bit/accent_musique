@@ -137,12 +137,20 @@ class Mailer {
     public function sendRegistrationConfirmation(string $email, string $fullname): bool {
         $subject = 'Bienvenue sur Accent-Musique - Inscription reçue';
         $loginUrl = BASE_URL . '/login';
+        $cguUrl = BASE_URL . '/cgu';
+        $iban = defined('PAYMENT_IBAN') ? PAYMENT_IBAN : (getenv('PAYMENT_IBAN') ?: '');
+        $ibanBic = defined('PAYMENT_BIC') ? PAYMENT_BIC : (getenv('PAYMENT_BIC') ?: '');
+        $ibanHolder = defined('PAYMENT_HOLDER') ? PAYMENT_HOLDER : (getenv('PAYMENT_HOLDER') ?: 'Association Accent Musique');
 
         $html = $this->renderEmail(
             'register_confirmation',
             [
-                'fullname' => $fullname,
-                'loginUrl' => $loginUrl,
+                'fullname'   => $fullname,
+                'loginUrl'   => $loginUrl,
+                'cguUrl'     => $cguUrl,
+                'iban'       => $iban,
+                'ibanBic'    => $ibanBic,
+                'ibanHolder' => $ibanHolder,
             ],
             'Inscription enregistrée',
             'Votre demande d\'inscription sur Accent-Musique est en cours de traitement.',
