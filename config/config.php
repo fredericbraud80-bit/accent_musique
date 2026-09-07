@@ -47,6 +47,10 @@ define('MAIL_FROM_ADDRESS', $_ENV['MAIL_FROM_ADDRESS'] ?? 'contact@accent-musiqu
 define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME'] ?? APP_NAME);
 define('ADMIN_EMAIL', $_ENV['ADMIN_EMAIL'] ?? 'admin@accent-musique.fr');
 
-define('GOOGLE_CLIENT_SECRET_FILE', $_ENV['GOOGLE_CLIENT_SECRET_FILE'] ?? __DIR__ . '/../storage/google-client-secret.json');
+$googleClientSecretFile = $_ENV['GOOGLE_CLIENT_SECRET_FILE'] ?? __DIR__ . '/../storage/google-client-secret.json';
+if ($googleClientSecretFile !== '' && !preg_match('/^(?:[A-Za-z]:[\\\\\/]|\\\\\\\\|\/)/', $googleClientSecretFile)) {
+    $googleClientSecretFile = dirname(__DIR__) . '/' . ltrim($googleClientSecretFile, '/\\');
+}
+define('GOOGLE_CLIENT_SECRET_FILE', $googleClientSecretFile);
 define('GOOGLE_REDIRECT_URI', $_ENV['GOOGLE_REDIRECT_URI'] ?? BASE_URL . '/admin/google-drive/callback');
 define('GOOGLE_DRIVE_ROOT_FOLDER_ID', $_ENV['GOOGLE_DRIVE_ROOT_FOLDER_ID'] ?? '');
