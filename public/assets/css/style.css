@@ -1,4 +1,182 @@
-﻿/* ==========================================================================
+﻿.artist-tree {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.artist-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.artist-root-form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.artist-root-form .form-control {
+  max-width: 300px;
+}
+
+.artist-root-status {
+  margin-left: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.artist-warning {
+  color: var(--danger-text);
+  margin-bottom: 1rem;
+}
+
+.artist-link-form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.artist-link-form .form-control {
+  flex: 1;
+  min-width: 240px;
+}
+
+.artist-drive-contents {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.artist-drive-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background-color: var(--bg-input);
+  color: var(--text-main);
+}
+
+.artist-drive-item:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.artist-drive-item small {
+  color: var(--text-muted);
+}
+
+.artist-tree-root,
+.artist-tree-node {
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border-radius: calc(var(--radius) * 1.2);
+  overflow: hidden;
+}
+
+.artist-tree-root > summary,
+.artist-tree-node > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 1rem 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.artist-tree-root > summary:hover,
+.artist-tree-node > summary:hover {
+  background-color: var(--bg-input);
+  color: var(--primary);
+}
+
+.artist-tree-root > summary::-webkit-details-marker,
+.artist-tree-node > summary::-webkit-details-marker {
+  display: none;
+}
+
+.artist-tree-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-right: 0.45rem;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+}
+
+.artist-tree-root[open] > summary .artist-tree-toggle,
+.artist-tree-node[open] > summary .artist-tree-toggle {
+  font-size: 0;
+}
+
+.artist-tree-root[open] > summary .artist-tree-toggle::after,
+.artist-tree-node[open] > summary .artist-tree-toggle::after {
+  content: '-';
+  font-size: 1rem;
+}
+
+.artist-tree-content {
+  padding: 0 1.25rem 1.25rem 2.8rem;
+}
+
+.artist-tree-children {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--border-color);
+}
+
+.artist-folder-actions,
+.artist-user-access,
+.artist-user-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.artist-folder-actions {
+  margin-bottom: 1rem;
+}
+
+.artist-folder-access {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.artist-user-access,
+.artist-user-result {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background-color: var(--bg-input);
+  color: var(--text-main);
+}
+
+.artist-user-access small,
+.artist-user-result small {
+  color: var(--text-muted, #667085);
+}
+
+.artist-user-search-results {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+}
+/* ==========================================================================
    1. VARIABLES DE THÈME
    ========================================================================== */
 :root {

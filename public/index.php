@@ -59,12 +59,33 @@ $router->get('/favorites', [Controllers\CourseController::class, 'favorites'], [
 $router->post('/favorites/{id}/toggle', [Controllers\CourseController::class, 'toggleFavorite'], [Middlewares\AuthMiddleware::class]);
 $router->get('/files/{fileId}/preview', [Controllers\DownloadController::class, 'preview'], [Middlewares\AuthMiddleware::class]);
 $router->get('/download/{fileId}', [Controllers\DownloadController::class, 'download'], [Middlewares\AuthMiddleware::class]);
+$router->get('/artiste', [Controllers\ArtistController::class, 'index'], [Middlewares\AuthMiddleware::class]);
+$router->get('/artiste/dossier/{id}', [Controllers\ArtistController::class, 'folder'], [Middlewares\AuthMiddleware::class]);
+$router->get('/artiste/dossier/{folderId}/fichier/{fileId}', [Controllers\ArtistController::class, 'file'], [Middlewares\AuthMiddleware::class]);
 
 $router->get('/admin', [Controllers\AdminController::class, 'dashboard'], [Middlewares\AdminMiddleware::class]);
+$router->get('/admin/artistes', [Controllers\AdminController::class, 'artistManagement'], [Middlewares\AdminMiddleware::class]);
 $router->post('/admin/validate/{id}', [Controllers\AdminController::class, 'validate'], [Middlewares\AdminMiddleware::class]);
 $router->post('/admin/reject/{id}', [Controllers\AdminController::class, 'reject'], [Middlewares\AdminMiddleware::class]);
 $router->post('/admin/promote/{id}', [Controllers\AdminController::class, 'promote'], [Middlewares\AdminMiddleware::class]);
 $router->post('/admin/renewLicense/{id}', [Controllers\AdminController::class, 'renewLicense'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/users/{id}/spaces', [Controllers\AdminController::class, 'updateSpaces'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-folders/{id}/users', [Controllers\AdminController::class, 'updateArtistFolderUsers'], [Middlewares\AdminMiddleware::class]);
+$router->get('/admin/artist-folders/{id}/users/search', [Controllers\AdminController::class, 'searchArtistFolderUsers'], [Middlewares\AdminMiddleware::class]);
+$router->get('/admin/artist-spaces/{id}/users/search', [Controllers\AdminController::class, 'searchArtistSpaceUsers'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-folders/{id}/users/add', [Controllers\AdminController::class, 'addArtistFolderUser'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-spaces/{id}/users/add', [Controllers\AdminController::class, 'addArtistSpaceUser'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-folders/{id}/users/{userId}/remove', [Controllers\AdminController::class, 'removeArtistFolderUser'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-spaces/{id}/users/{userId}/remove', [Controllers\AdminController::class, 'removeArtistSpaceUser'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-folders/{id}/delete', [Controllers\AdminController::class, 'deleteArtistFolder'], [Middlewares\AdminMiddleware::class]);
+$router->get('/admin/google-drive/connect', [Controllers\AdminController::class, 'connectGoogleDrive'], [Middlewares\AdminMiddleware::class]);
+$router->get('/admin/google-drive/callback', [Controllers\AdminController::class, 'googleDriveCallback'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/google-drive/check', [Controllers\AdminController::class, 'checkGoogleDrive'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/google-drive/sync', [Controllers\AdminController::class, 'syncArtistSpaces'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-folders', [Controllers\AdminController::class, 'createArtistFolder'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-spaces', [Controllers\AdminController::class, 'createArtistSpace'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-spaces/{id}/drive', [Controllers\AdminController::class, 'linkArtistSpaceDrive'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artist-folders/{id}/drive', [Controllers\AdminController::class, 'linkArtistFolderDrive'], [Middlewares\AdminMiddleware::class]);
 
 $router->get('/admin/courses', [Controllers\AdminController::class, 'courses'], [Middlewares\AdminMiddleware::class]);
 $router->get('/admin/courses/create', [Controllers\AdminController::class, 'createCourse'], [Middlewares\AdminMiddleware::class]);

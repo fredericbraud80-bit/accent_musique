@@ -10,6 +10,16 @@ class File extends Model {
         return $stmt->fetch() ?: null;
     }
 
+    public function findLinkedToCourse(int $id): ?array {
+        $stmt = $this->db->prepare("SELECT f.*
+            FROM files f
+            LEFT JOIN courses c ON c.file_id = f.id OR c.id = f.course_id
+            WHERE f.id = :id AND c.id IS NOT NULL
+            LIMIT 1");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch() ?: null;
+    }
+
     /**
      * Créer un enregistrement de fichier
      */

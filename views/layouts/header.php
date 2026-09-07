@@ -31,14 +31,22 @@
                         <?php
                             $username = \Core\Security::sanitize(\Core\Session::get('user_name'));
                             $initial = strtoupper(substr($username, 0, 1));
+                            $isAdmin = \Core\Session::get('user_role') === 'admin';
+                            $hasStudentAccess = $isAdmin || \Core\Session::get('user_access_student') === true;
+                            $hasArtistAccess = $isAdmin || \Core\Session::get('user_access_artist') === true;
                         ?>
                         <div class="user-avatar" id="user-menu-toggle">
                             <?= $initial ?>
                         </div>
 
                         <div class="user-dropdown" id="user-dropdown">
-                            <a href="<?= BASE_URL ?>/accueil">🏠 Catégories</a>
-                            <a href="<?= BASE_URL ?>/favorites">⭐ Favoris</a>
+                            <?php if ($hasStudentAccess): ?>
+                                <a href="<?= BASE_URL ?>/accueil">🏠 Catégories</a>
+                                <a href="<?= BASE_URL ?>/favorites">⭐ Favoris</a>
+                            <?php endif; ?>
+                            <?php if ($hasArtistAccess && !$isAdmin): ?>
+                                <a href="<?= BASE_URL ?>/artiste">🎙️ Espace artiste</a>
+                            <?php endif; ?>
 
                             <form action="<?= BASE_URL ?>/logout" method="POST">
                                 <input type="hidden" name="csrf_token" value="<?= \Core\Security::generateCsrfToken() ?>">
@@ -47,7 +55,7 @@
                         </div>
 
 
-                    <?php if (\Core\Session::get('user_role') === 'admin'): ?>
+                    <?php if ($isAdmin): ?>
                         <a href="<?= BASE_URL ?>/admin" class="btn"
                            style="background:#a855f7; color:white;">
                             Admin
@@ -73,16 +81,15 @@
         </div>
     </nav>
 <script src="<?= BASE_URL ?>/assets/js/theme.js"></script>
-</body>
 
     <!-- CONTENU PRINCIPAL -->
     <main class="main-container">
 
         <!-- Messages Flash -->
         <?php if ($msg = \Core\Session::getFlash('error')): ?>
-            <div class="alert alert-error"><?= $msg ?></div>
+            <div class="alert alert-error"><?= htmlspecialchars($msg, ENT_QUOTES, 'UTF-8') ?></div>
         <?php endif; ?>
 
         <?php if ($msg = \Core\Session::getFlash('success')): ?>
-            <div class="alert alert-success"><?= $msg ?></div>
+            <div class="alert alert-success"><?= htmlspecialchars($msg, ENT_QUOTES, 'UTF-8') ?></div>
         <?php endif; ?>

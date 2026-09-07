@@ -38,6 +38,12 @@
     <!-- Bouton de navigation -->
     <div style="margin: 2rem 0;">
         <a href="<?= BASE_URL ?>/admin/courses" class="btn btn-primary">📚 Gérer les cours</a>
+        <a href="<?= BASE_URL ?>/admin/artistes" class="btn btn-primary">🎙️ Gérer les artistes</a>
+        <a href="<?= BASE_URL ?>/admin/google-drive/connect" class="btn btn-primary">☁ Connecter Google Drive</a>
+    </div>
+
+    <div class="page-header">
+        <h2 class="page-title" style="font-size: 1.5rem;">Espaces utilisateurs</h2>
     </div>
 
     <!-- Demandes en attente -->
@@ -96,6 +102,7 @@
                         <th class="page-subtitle">Nom</th>
                         <th class="page-subtitle">Email</th>
                         <th class="page-subtitle">Rôle</th>
+                        <th class="page-subtitle">Espaces</th>
                         <th class="page-subtitle">Date</th>
 
                         <th class="page-subtitle">Licence</th>
@@ -113,6 +120,16 @@
                                 <span class="badge">
                                     <?= $user['role'] === 'admin' ? '👤 Admin' : '📚 Élève' ?>
                                 </span>
+                            </td>
+
+                            <td>
+                                <form method="POST" action="<?= BASE_URL ?>/admin/users/<?= $user['id'] ?>/spaces">
+                                    <input type="hidden" name="csrf_token" value="<?= \Core\Security::generateCsrfToken() ?>">
+                                    <?php $spaces = $user['spaces'] === '' ? [] : explode(',', $user['spaces']); ?>
+                                    <label><input type="checkbox" name="spaces[]" value="student" <?= in_array('student', $spaces, true) ? 'checked' : '' ?>> Élève</label>
+                                    <label><input type="checkbox" name="spaces[]" value="artist" <?= in_array('artist', $spaces, true) ? 'checked' : '' ?>> Artiste</label>
+                                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                                </form>
                             </td>
 
                             <td class="page-subtitle"><?= date('d/m/Y', strtotime($user['created_at'])) ?></td>
@@ -137,7 +154,6 @@
             </table>
         </div>
     <?php endif; ?>
-
 
     <div class="page-header">
         <h2 class="page-title" style="font-size: 1.5rem; color: var(--danger);">⚠ Licences Expirées</h2>

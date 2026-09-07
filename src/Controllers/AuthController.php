@@ -55,13 +55,15 @@ class AuthController extends Controller {
         Session::set('user_name', $user['fullname']);
         Session::set('user_role', $user['role']);
         Session::set('csrf_token', bin2hex(random_bytes(32)));
+        Session::set('user_access_student', (int)($user['access_student'] ?? 0) === 1);
+        Session::set('user_access_artist', (int)($user['access_artist'] ?? 0) === 1);
 
         Session::set('user_license_expires_at', $user['license_expires_at']);
         Session::set('user_license_active', $user['is_license_active']);
 
 
         Session::setFlash('success', 'Ravi de vous revoir, ' . $user['fullname'] . ' !');
-        $this->redirect('/accueil');
+        $this->redirect((int)($user['access_student'] ?? 0) === 1 ? '/accueil' : '/artiste');
     }
 
     public function showRegister(): void {

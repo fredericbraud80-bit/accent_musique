@@ -15,7 +15,7 @@ class DownloadController extends Controller {
 
     private function resolveFile(int $fileId): ?array {
         $fileModel = new File();
-        $file = $fileModel->findById($fileId);
+        $file = $fileModel->findLinkedToCourse($fileId);
 
         if (!$file) {
             return null;
@@ -51,6 +51,13 @@ class DownloadController extends Controller {
         return $file;
     }
 
+    private function safeDownloadName(string $originalName): string {
+        $name = basename($originalName);
+        $name = preg_replace('/[\x00-\x1F\x7F"\\]/', '_', $name) ?: 'download';
+
+        return $name;
+    }
+
     public function download(int $fileId): void {
         $this->requireAuth();
 
@@ -66,7 +73,7 @@ class DownloadController extends Controller {
 
         header('Content-Description: File Transfer');
         header('Content-Type: ' . $file['mime_type']);
-        header('Content-Disposition: attachment; filename="' . basename($file['original_name']) . '"');
+        header('Content-Disposition: attachment; filename="' . $this->safeDownloadName((string)$file['original_name']) . '"');
         header('Content-Length: ' . filesize($file['path']));
         header('X-Content-Type-Options: nosniff');
         header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -90,7 +97,7 @@ class DownloadController extends Controller {
         }
 
         header('Content-Type: ' . $file['mime_type']);
-        header('Content-Disposition: inline; filename="' . basename($file['original_name']) . '"');
+        header('Content-Disposition: inline; filename="' . $this->safeDownloadName((string)$file['original_name']) . '"');
         header('Content-Length: ' . filesize($file['path']));
         header('X-Content-Type-Options: nosniff');
 

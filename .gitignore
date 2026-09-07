@@ -1,0 +1,4 @@
+.env
+storage/google-client-secret.json
+storage/files/*
+!storage/files/.gitkeep
