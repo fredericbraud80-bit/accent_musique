@@ -19,7 +19,17 @@
         <div class="nav-container">
 
             <!-- Logo -->
-            <a href="<?= BASE_URL ?>" class="nav-brand">
+            <?php
+                $logoTarget = BASE_URL . '/';
+                if (\Core\Session::has('user_id')) {
+                    if (\Core\Session::get('user_access_student') === true || \Core\Session::get('user_role') === 'admin') {
+                        $logoTarget = BASE_URL . '/accueil';
+                    } elseif (\Core\Session::get('user_access_artist') === true) {
+                        $logoTarget = BASE_URL . '/artiste';
+                    }
+                }
+            ?>
+            <a href="<?= $logoTarget ?>" class="nav-brand">
                 ACCENT<span><span class="brand-sub">MUSIQUE</span>
             </a>
 

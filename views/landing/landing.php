@@ -15,6 +15,14 @@
 
 <body>
 
+    <?php if (\Core\Session::has('user_id')): ?>
+        <?php if ($msg = \Core\Session::getFlash('error')): ?>
+            <div class="alert alert-error" style="max-width:900px;margin:1rem auto;padding:0.75rem 1rem;background:#fde8e8;color:#b91c1c;border-radius:8px;text-align:center;">
+                <?= htmlspecialchars($msg, ENT_QUOTES, 'UTF-8') ?>
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+
     <!-- NAVIGATION NAVBAR -->
     <header class="navbar" id="navbar">
         <div class="nav-container">
@@ -35,7 +43,11 @@
 
                 <div class="nav-auth-group">
                     <?php if (\Core\Session::has('user_id')): ?>
-                        <a href="<?= BASE_URL ?>/accueil" class="btn btn-sm btn-primary">Mon Espace</a>
+                        <?php if (\Core\Session::get('user_access_student') === true || \Core\Session::get('user_role') === 'admin'): ?>
+                            <a href="<?= BASE_URL ?>/accueil" class="btn btn-sm btn-primary">Mon Espace</a>
+                        <?php elseif (\Core\Session::get('user_access_artist') === true): ?>
+                            <a href="<?= BASE_URL ?>/artiste" class="btn btn-sm btn-primary">Mon Espace</a>
+                        <?php endif; ?>
                         <?php if (\Core\Session::get('user_role') === 'admin'): ?>
                             <a href="<?= BASE_URL ?>/admin" class="btn btn-sm btn-admin">Admin</a>
                         <?php endif; ?>
@@ -408,7 +420,11 @@
 
                 <div class="pricing-footer">
                     <?php if (\Core\Session::has('user_id')): ?>
-                        <a href="<?= BASE_URL ?>/accueil" class="btn btn-outline btn-block">Accéder à mes cours</a>
+                        <?php if (\Core\Session::get('user_access_student') === true || \Core\Session::get('user_role') === 'admin'): ?>
+                            <a href="<?= BASE_URL ?>/accueil" class="btn btn-outline btn-block">Accéder à mes cours</a>
+                        <?php elseif (\Core\Session::get('user_access_artist') === true): ?>
+                            <a href="<?= BASE_URL ?>/artiste" class="btn btn-outline btn-block">Accéder à mon espace</a>
+                        <?php endif; ?>
                     <?php else: ?>
                         <a href="<?= BASE_URL ?>/register" class="btn btn-outline btn-block">Application accessible dès le 01/11/2026</a>
                     <?php endif; ?>
@@ -521,8 +537,12 @@
                 <h4 class="footer-heading">Espace Membre</h4>
                 <nav class="footer-nav">
                     <?php if (\Core\Session::has('user_id')): ?>
-                        <a href="<?= BASE_URL ?>/accueil">Mon Espace</a>
-                        <a href="<?= BASE_URL ?>/favorites">Mes Favoris</a>
+                        <?php if (\Core\Session::get('user_access_student') === true || \Core\Session::get('user_role') === 'admin'): ?>
+                            <a href="<?= BASE_URL ?>/accueil">Mon Espace</a>
+                            <a href="<?= BASE_URL ?>/favorites">Mes Favoris</a>
+                        <?php elseif (\Core\Session::get('user_access_artist') === true): ?>
+                            <a href="<?= BASE_URL ?>/artiste">Mon Espace</a>
+                        <?php endif; ?>
                     <?php else: ?>
                         <a href="<?= BASE_URL ?>/login">Connexion</a>
                         <a href="<?= BASE_URL ?>/register">Créer un compte</a>

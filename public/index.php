@@ -39,8 +39,8 @@ $router->get('/mentions-legales', [Controllers\LegalController::class, 'mentions
 $router->get('/cgu', [Controllers\LegalController::class, 'cgu']);
 $router->get('/CGU', [Controllers\LegalController::class, 'cgu']);
 
-$router->get('/accueil', [Controllers\CategoryController::class, 'home'], [Middlewares\AuthMiddleware::class]);
-$router->get('/categorie/{slug}', [Controllers\CategoryController::class, 'show'], [Middlewares\AuthMiddleware::class]);
+$router->get('/accueil', [Controllers\CategoryController::class, 'home'], [Middlewares\StudentAccessMiddleware::class]);
+$router->get('/categorie/{slug}', [Controllers\CategoryController::class, 'show'], [Middlewares\StudentAccessMiddleware::class]);
 
 $router->get('/login', [Controllers\AuthController::class, 'showLogin'], [Middlewares\GuestMiddleware::class]);
 $router->post('/login', [Controllers\AuthController::class, 'login'], [Middlewares\GuestMiddleware::class]);
@@ -52,16 +52,16 @@ $router->get('/reset-password', [Controllers\AuthController::class, 'showResetPa
 $router->post('/reset-password', [Controllers\AuthController::class, 'resetPassword'], [Middlewares\GuestMiddleware::class]);
 $router->post('/logout', [Controllers\AuthController::class, 'logout'], [Middlewares\AuthMiddleware::class]);
 
-$router->get('/courses', [Controllers\CourseController::class, 'index'], [Middlewares\AuthMiddleware::class]);
-$router->get('/books/{id}', [Controllers\CourseController::class, 'show'], [Middlewares\AuthMiddleware::class]);
-$router->get('/courses/{id}', [Controllers\CourseController::class, 'show'], [Middlewares\AuthMiddleware::class]);
-$router->get('/favorites', [Controllers\CourseController::class, 'favorites'], [Middlewares\AuthMiddleware::class]);
-$router->post('/favorites/{id}/toggle', [Controllers\CourseController::class, 'toggleFavorite'], [Middlewares\AuthMiddleware::class]);
-$router->get('/files/{fileId}/preview', [Controllers\DownloadController::class, 'preview'], [Middlewares\AuthMiddleware::class]);
-$router->get('/download/{fileId}', [Controllers\DownloadController::class, 'download'], [Middlewares\AuthMiddleware::class]);
-$router->get('/artiste', [Controllers\ArtistController::class, 'index'], [Middlewares\AuthMiddleware::class]);
-$router->get('/artiste/dossier/{id}', [Controllers\ArtistController::class, 'folder'], [Middlewares\AuthMiddleware::class]);
-$router->get('/artiste/dossier/{folderId}/fichier/{fileId}', [Controllers\ArtistController::class, 'file'], [Middlewares\AuthMiddleware::class]);
+$router->get('/courses', [Controllers\CourseController::class, 'index'], [Middlewares\StudentAccessMiddleware::class]);
+$router->get('/books/{id}', [Controllers\CourseController::class, 'show'], [Middlewares\StudentAccessMiddleware::class]);
+$router->get('/courses/{id}', [Controllers\CourseController::class, 'show'], [Middlewares\StudentAccessMiddleware::class]);
+$router->get('/favorites', [Controllers\CourseController::class, 'favorites'], [Middlewares\StudentAccessMiddleware::class]);
+$router->post('/favorites/{id}/toggle', [Controllers\CourseController::class, 'toggleFavorite'], [Middlewares\StudentAccessMiddleware::class]);
+$router->get('/files/{fileId}/preview', [Controllers\DownloadController::class, 'preview'], [Middlewares\StudentAccessMiddleware::class]);
+$router->get('/download/{fileId}', [Controllers\DownloadController::class, 'download'], [Middlewares\StudentAccessMiddleware::class]);
+$router->get('/artiste', [Controllers\ArtistController::class, 'index'], [Middlewares\ArtistAccessMiddleware::class]);
+$router->get('/artiste/dossier/{id}', [Controllers\ArtistController::class, 'folder'], [Middlewares\ArtistAccessMiddleware::class]);
+$router->get('/artiste/dossier/{folderId}/fichier/{fileId}', [Controllers\ArtistController::class, 'file'], [Middlewares\ArtistAccessMiddleware::class]);
 
 $router->get('/admin', [Controllers\AdminController::class, 'dashboard'], [Middlewares\AdminMiddleware::class]);
 $router->get('/admin/artistes', [Controllers\AdminController::class, 'artistManagement'], [Middlewares\AdminMiddleware::class]);
