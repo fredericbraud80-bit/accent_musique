@@ -46,6 +46,29 @@
         <h2 class="page-title" style="font-size: 1.5rem;">Espaces utilisateurs</h2>
     </div>
 
+    <!-- Inscription d'un artiste par invitation -->
+    <div class="page-header">
+        <h2 class="page-title" style="font-size: 1.5rem;">🎙️ Inscrire un artiste (invitation)</h2>
+    </div>
+
+    <div class="info-box">
+        <form method="POST" action="<?= BASE_URL ?>/admin/artists/invite" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+            <input type="hidden" name="csrf_token" value="<?= \Core\Security::generateCsrfToken() ?>">
+            <div style="flex:1; min-width:200px;">
+                <label class="page-subtitle" for="invite-fullname" style="display:block; margin-bottom:0.25rem;">Nom et prénom</label>
+                <input type="text" id="invite-fullname" name="fullname" required placeholder="Ex : Jean Dupont"
+                       style="width:100%; padding:0.5rem; border:1px solid var(--border-color); border-radius:6px;">
+            </div>
+            <div style="flex:1; min-width:220px;">
+                <label class="page-subtitle" for="invite-email" style="display:block; margin-bottom:0.25rem;">Email</label>
+                <input type="email" id="invite-email" name="email" required placeholder="artiste@exemple.com"
+                       style="width:100%; padding:0.5rem; border:1px solid var(--border-color); border-radius:6px;">
+            </div>
+            <button type="submit" class="btn btn-primary">✉ Inviter l'artiste</button>
+        </form>
+        <p class="page-subtitle" style="margin-top:0.75rem;">L'artiste est ajouté directement aux utilisateurs validés (artiste ✓, élève ✗) et reçoit un email l'invitant à accéder à ses enregistrements, mixages, arrangements et masters.</p>
+    </div>
+
     <!-- Demandes en attente -->
     <div class="page-header">
         <h2 class="page-title" style="font-size: 1.5rem;">📋 Demandes d'Inscription en Attente</h2>

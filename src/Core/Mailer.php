@@ -162,6 +162,30 @@ class Mailer {
     }
 
     /**
+     * Envoie l'email d'invitation à un artiste (accès à l'espace artiste)
+     */
+    public function sendArtistInvitation(string $email, string $fullname, ?string $setPasswordUrl = null): bool {
+        $subject = 'Votre accès artiste Accent-Musique';
+        $loginUrl = BASE_URL . '/login';
+
+        $html = $this->renderEmail(
+            'artist_invitation',
+            [
+                'fullname'       => $fullname,
+                'email'          => $email,
+                'loginUrl'       => $loginUrl,
+                'setPasswordUrl' => $setPasswordUrl,
+            ],
+            'Votre espace artiste est prêt',
+            'Accédez dès maintenant à vos enregistrements, mixages, arrangements et masters.',
+            $setPasswordUrl ?? $loginUrl,
+            $setPasswordUrl ? 'Définir mon mot de passe' : 'Se connecter maintenant'
+        );
+
+        return $this->send($email, $subject, $html, '', $fullname);
+    }
+
+    /**
      * Envoie un email de réinitialisation de mot de passe sécurisé
      */
     public function sendPasswordResetLink(string $email, string $fullname, string $resetLink, int $expiryMinutes = 60): bool {

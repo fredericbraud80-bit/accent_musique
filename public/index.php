@@ -70,6 +70,7 @@ $router->post('/admin/reject/{id}', [Controllers\AdminController::class, 'reject
 $router->post('/admin/promote/{id}', [Controllers\AdminController::class, 'promote'], [Middlewares\AdminMiddleware::class]);
 $router->post('/admin/renewLicense/{id}', [Controllers\AdminController::class, 'renewLicense'], [Middlewares\AdminMiddleware::class]);
 $router->post('/admin/users/{id}/spaces', [Controllers\AdminController::class, 'updateSpaces'], [Middlewares\AdminMiddleware::class]);
+$router->post('/admin/artists/invite', [Controllers\AdminController::class, 'inviteArtist'], [Middlewares\AdminMiddleware::class]);
 $router->post('/admin/artist-folders/{id}/users', [Controllers\AdminController::class, 'updateArtistFolderUsers'], [Middlewares\AdminMiddleware::class]);
 $router->get('/admin/artist-folders/{id}/users/search', [Controllers\AdminController::class, 'searchArtistFolderUsers'], [Middlewares\AdminMiddleware::class]);
 $router->get('/admin/artist-spaces/{id}/users/search', [Controllers\AdminController::class, 'searchArtistSpaceUsers'], [Middlewares\AdminMiddleware::class]);
