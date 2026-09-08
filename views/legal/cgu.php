@@ -23,7 +23,7 @@ use Core\Security;
         </div>
     </div>
 
-    
+
 
     <!-- ARTICLE 1 : OBJET -->
     <div class="legal-card">
@@ -50,7 +50,7 @@ use Core\Security;
     <!-- ARTICLE 3 : INSCRIPTION ET GESTION DU COMPTE -->
     <div class="legal-card">
         <h2><span>👤</span> Article 3 – Inscription, Validation et Accès à l'Espace Membre</h2>
-        
+
         <h3>3.1. Création de compte</h3>
         <p>
             L'accès aux fonctionnalités complètes (cours, bibliothèque PDF, vidéos) nécessite la création d'un compte personnel. L'utilisateur s'engage à fournir des informations véridiques, complètes et à jour (nom complet, adresse e-mail valide).
@@ -166,14 +166,14 @@ use Core\Security;
 <div class="legal-card">
     <h2><span>🎼</span> Article 12 – Utilisation de Morceaux et Œuvres Musicales Protégées</h2>
     <p>
-        Dans le cadre de ses activités pédagogiques, la plateforme Accent Musique propose des contenus incluant 
+        Dans le cadre de ses activités pédagogiques, la plateforme Accent Musique propose des contenus incluant
         l’étude, l’analyse, l’interprétation ou la démonstration de morceaux existants protégés par le droit d’auteur.
     </p>
 
     <p>
-        Les extraits musicaux présents dans les vidéos, partitions, tutoriels ou documents pédagogiques sont utilisés 
-        exclusivement à des fins d’enseignement, conformément aux exceptions prévues par le Code de la propriété 
-        intellectuelle. Lorsque des œuvres sont interprétées, rejouées ou réarrangées par les enseignants, ces 
+        Les extraits musicaux présents dans les vidéos, partitions, tutoriels ou documents pédagogiques sont utilisés
+        exclusivement à des fins d’enseignement, conformément aux exceptions prévues par le Code de la propriété
+        intellectuelle. Lorsque des œuvres sont interprétées, rejouées ou réarrangées par les enseignants, ces
         enregistrements constituent des créations pédagogiques originales réalisées par l’association.
     </p>
 
@@ -186,11 +186,79 @@ use Core\Security;
     </ul>
 
     <p>
-        L’association Accent Musique s’engage à n’utiliser que des extraits strictement nécessaires à l’enseignement 
+        L’association Accent Musique s’engage à n’utiliser que des extraits strictement nécessaires à l’enseignement
         et à respecter les règles applicables en matière de droit d’auteur et de propriété intellectuelle.
     </p>
 </div>
 
+
+    <!-- ================================================== -->
+    <!-- CONDITIONS GÉNÉRALES DE VENTE (CGV) -->
+    <!-- ================================================== -->
+    <div class="legal-card" style="margin-top:3rem;">
+        <div class="legal-badge-draft">
+            <span>💳 CGV – Conditions Générales de Vente</span>
+        </div>
+        <h2 class="page-title" style="font-size:1.8rem;">Conditions Générales de Vente (CGV)</h2>
+        <p class="page-subtitle">Modalités d'adhésion, de paiement et d'accès aux services payants d'Accent Musique.</p>
+    </div>
+
+    <!-- CGV ARTICLE 1 : SERVICES CONCERNÉS -->
+    <div class="legal-card">
+        <h2><span>🎯</span> Article 1 – Services concernés</h2>
+        <p>
+            Les présentes Conditions Générales de Vente (ci-après « <strong>CGV</strong> ») régissent les ventes de prestations payantes proposées par l'association <strong>Accent Musique</strong> : adhésions annuelles, formules pédagogiques et cours donnant accès à l'espace membre et à ses ressources (méthodes, partitions, vidéos, fiches techniques).
+        </p>
+        <p>
+            Les CGV complètent les CGU ci-dessus ; en cas de contradiction, les CGV prévalent pour tout ce qui concerne les aspects financiers.
+        </p>
+    </div>
+
+    <!-- CGV ARTICLE 2 : TARIFS -->
+    <div class="legal-card">
+        <h2><span>💰</span> Article 2 – Tarifs</h2>
+        <p>
+            Les tarifs des adhésions et formules sont indiqués en euros, toutes taxes comprises, et communiqués lors de l'inscription ou par les enseignants. Ils peuvent être révisés à chaque saison pédagogique ; le tarif applicable est celui en vigueur au moment de l'adhésion.
+        </p>
+    </div>
+
+    <!-- CGV ARTICLE 3 : PAIEMENT -->
+    <div class="legal-card">
+        <h2><span>🏦</span> Article 3 – Paiement</h2>
+        <p>
+            Le règlement s'effectue par <strong>virement bancaire</strong> aux coordonnées communiquées lors de l'inscription, ou par tout autre moyen accepté par l'association (chèque, espèces auprès des enseignants).
+        </p>
+        <p>
+            L'adhésion est valable pour une durée d'un an.
+        </p>
+    </div>
+
+    <!-- CGV ARTICLE 4 : ACCÈS AU SERVICE -->
+    <div class="legal-card">
+        <h2><span>⏱️</span> Article 4 – Activation de l'accès</h2>
+        <p>
+            L'accès complet à l'espace membre est ouvert après <strong>validation de l'inscription par l'administrateur</strong> et confirmation du paiement de l'adhésion. Compte tenu de la nature numérique et immédiatement consommable des services, le droit de rétractation prévu par le Code de la consommation ne s'applique pas dès lors que l'accès aux contenus a été effectivement utilisé, sauf accord amiable de l'association.
+        </p>
+    </div>
+
+    <!-- CGV ARTICLE 5 : REMBOURSEMENT -->
+    <div class="legal-card">
+        <h2><span>↩️</span> Article 5 – Remboursement et interruption d'adhésion</h2>
+        <p>
+            L'adhésion n'est ni remboursable ni cessible, sauf en cas de non-fournissement du service par l'association (dissolution, fermeture de la plateforme) ou sur décision exceptionnelle du bureau.
+        </p>
+        <p>
+            En cas de suspension ou de clôture de compte pour manquement aux CGU (Article 8), aucune somme versée ne sera remboursée.
+        </p>
+    </div>
+
+    <!-- CGV ARTICLE 6 : DROIT APPLICABLE -->
+    <div class="legal-card">
+        <h2><span>⚖️</span> Article 6 – Droit applicable</h2>
+        <p>
+            Les présentes CGV sont soumises au <strong>droit français</strong>. Tout litige relève des tribunaux compétents du ressort de Perpignan, après tentative de résolution amiable auprès de l'association (contact : <a href="mailto:contact@accentmusique.fr">contact@accentmusique.fr</a>).
+        </p>
+    </div>
 
     <!-- Actions du bas -->
     <div class="legal-actions-bar">
