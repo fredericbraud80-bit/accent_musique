@@ -21,8 +21,9 @@ class DownloadController extends Controller {
             return null;
         }
 
-        $baseDir = realpath(STORAGE_PATH);
-        $fullPath = realpath(STORAGE_PATH . $file['stored_name']);
+        $storagePath = rtrim(STORAGE_PATH, "/\\") . DIRECTORY_SEPARATOR;
+        $baseDir = realpath($storagePath);
+        $fullPath = realpath($storagePath . ltrim((string)$file['stored_name'], "/\\"));
 
         if ($baseDir === false || $fullPath === false) {
             return null;
@@ -41,7 +42,10 @@ class DownloadController extends Controller {
             'video/mp4'
         ];
 
-        $mimeType = mime_content_type($fullPath);
+        $mimeType = function_exists('mime_content_type') ? mime_content_type($fullPath) : null;
+        if ($this->isPdfFile($fullPath)) {
+            $mimeType = 'application/pdf';
+        }
         if (!is_string($mimeType) || !in_array($mimeType, $allowedMimeTypes, true)) {
             return null;
         }
@@ -49,6 +53,18 @@ class DownloadController extends Controller {
         $file['path'] = $fullPath;
         $file['mime_type'] = $mimeType;
         return $file;
+    }
+
+    private function isPdfFile(string $path): bool {
+        $handle = @fopen($path, 'rb');
+        if ($handle === false) {
+            return false;
+        }
+
+        $signature = fread($handle, 5);
+        fclose($handle);
+
+        return $signature === '%PDF-';
     }
 
     private function safeDownloadName(string $originalName): string {
