@@ -84,8 +84,7 @@ class DownloadController extends Controller {
         }
 
         $handle = @fopen($file['path'], 'rb');
-        $fileSize = $handle !== false ? fstat($handle)['size'] ?? false : false;
-        if ($handle === false || $fileSize === false) {
+        if ($handle === false) {
             if (is_resource($handle)) {
                 fclose($handle);
             }
@@ -100,7 +99,6 @@ class DownloadController extends Controller {
         header('Content-Description: File Transfer');
         header('Content-Type: ' . $file['mime_type']);
         header('Content-Disposition: attachment; filename="' . $this->safeDownloadName((string)$file['original_name']) . '"');
-        header('Content-Length: ' . $fileSize);
         header('X-Content-Type-Options: nosniff');
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Pragma: no-cache');
@@ -120,8 +118,7 @@ class DownloadController extends Controller {
         }
 
         $handle = @fopen($file['path'], 'rb');
-        $fileSize = $handle !== false ? fstat($handle)['size'] ?? false : false;
-        if ($handle === false || $fileSize === false) {
+        if ($handle === false) {
             if (is_resource($handle)) {
                 fclose($handle);
             }
@@ -135,7 +132,6 @@ class DownloadController extends Controller {
 
         header('Content-Type: ' . $file['mime_type']);
         header('Content-Disposition: inline; filename="' . $this->safeDownloadName((string)$file['original_name']) . '"');
-        header('Content-Length: ' . $fileSize);
         header('X-Content-Type-Options: nosniff');
 
         fpassthru($handle);
