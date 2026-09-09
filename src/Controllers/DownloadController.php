@@ -83,6 +83,16 @@ class DownloadController extends Controller {
             throw new \RuntimeException('Fichier introuvable.');
         }
 
+        $handle = @fopen($file['path'], 'rb');
+        $fileSize = $handle !== false ? fstat($handle)['size'] ?? false : false;
+        if ($handle === false || $fileSize === false) {
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
+            http_response_code(500);
+            throw new \RuntimeException('Le fichier existe mais ne peut pas être lu par le serveur.');
+        }
+
         if (ob_get_level()) {
             ob_end_clean();
         }
@@ -90,12 +100,13 @@ class DownloadController extends Controller {
         header('Content-Description: File Transfer');
         header('Content-Type: ' . $file['mime_type']);
         header('Content-Disposition: attachment; filename="' . $this->safeDownloadName((string)$file['original_name']) . '"');
-        header('Content-Length: ' . filesize($file['path']));
+        header('Content-Length: ' . $fileSize);
         header('X-Content-Type-Options: nosniff');
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Pragma: no-cache');
 
-        readfile($file['path']);
+        fpassthru($handle);
+        fclose($handle);
         exit;
     }
 
@@ -108,16 +119,27 @@ class DownloadController extends Controller {
             throw new \RuntimeException('Fichier introuvable.');
         }
 
+        $handle = @fopen($file['path'], 'rb');
+        $fileSize = $handle !== false ? fstat($handle)['size'] ?? false : false;
+        if ($handle === false || $fileSize === false) {
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
+            http_response_code(500);
+            throw new \RuntimeException('Le fichier existe mais ne peut pas être lu par le serveur.');
+        }
+
         if (ob_get_level()) {
             ob_end_clean();
         }
 
         header('Content-Type: ' . $file['mime_type']);
         header('Content-Disposition: inline; filename="' . $this->safeDownloadName((string)$file['original_name']) . '"');
-        header('Content-Length: ' . filesize($file['path']));
+        header('Content-Length: ' . $fileSize);
         header('X-Content-Type-Options: nosniff');
 
-        readfile($file['path']);
+        fpassthru($handle);
+        fclose($handle);
         exit;
     }
 }
