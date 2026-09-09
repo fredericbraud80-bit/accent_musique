@@ -69,7 +69,7 @@ class DownloadController extends Controller {
 
     private function safeDownloadName(string $originalName): string {
         $name = basename($originalName);
-        $name = preg_replace('/[\x00-\x1F\x7F"\\]/', '_', $name) ?: 'download';
+        $name = preg_replace('/[\x00-\x1F\x7F"\\\\]/', '_', $name) ?: 'download';
 
         return $name;
     }
