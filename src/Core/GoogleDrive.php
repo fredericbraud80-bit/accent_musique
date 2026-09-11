@@ -137,6 +137,32 @@ class GoogleDrive {
         return $file->getWebContentLink() ?: $file->getWebViewLink();
     }
 
+    public function downloadFile(string $fileId): array {
+        $service = $this->service();
+        $file = $service->files->get($fileId, ['fields' => 'name,mimeType,size']);
+        $accessToken = $this->client->getAccessToken()['access_token'] ?? null;
+
+        if (!is_string($accessToken) || $accessToken === '') {
+            throw new \RuntimeException('Le compte Google Drive n’est pas authentifié.');
+        }
+
+        $response = $this->client->getHttpClient()->request(
+            'GET',
+            'https://www.googleapis.com/drive/v3/files/' . rawurlencode($fileId),
+            [
+                'headers' => ['Authorization' => 'Bearer ' . $accessToken],
+                'query' => ['alt' => 'media'],
+            ]
+        );
+
+        return [
+            'name' => (string)$file->getName(),
+            'mime_type' => (string)($file->getMimeType() ?: 'application/octet-stream'),
+            'size' => $file->getSize(),
+            'body' => $response->getBody(),
+        ];
+    }
+
     public function deleteFolder(string $folderId): void {
         $this->service()->files->delete($folderId);
     }
