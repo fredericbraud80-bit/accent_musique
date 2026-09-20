@@ -401,7 +401,7 @@
                     <p class="pricing-target">Espace Pédagogique</p>
                     <div class="pricing-price-box">
                         <div class="price-main">
-                            <span class="price-value">49</span>
+                            <span class="price-value">59</span>
                             <span class="price-unit">€</span>
                         </div>
                         <span class="price-period">pour une année</span>

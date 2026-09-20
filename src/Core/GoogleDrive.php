@@ -107,12 +107,7 @@ class GoogleDrive {
     }
 
     public function listFolder(string $folderId): array {
-        $response = $this->service()->files->listFiles([
-            'q' => sprintf("'%s' in parents and trashed = false", addslashes($folderId)),
-            'fields' => 'files(id,name,mimeType,size,webViewLink,webContentLink)',
-            'orderBy' => 'folder,name',
-        ]);
-        return $response->getFiles();
+        return $this->listFolderContents($folderId);
     }
 
     public function listFolderContents(string $folderId): array {

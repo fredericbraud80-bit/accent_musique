@@ -130,23 +130,23 @@ class ArtistSpace extends Model {
         return $stmt->execute(['drive_id' => $driveId, 'folder_id' => $folderId]);
     }
 
-    public function assignFolder(int $folderId, int $userId): bool {
-        $stmt = $this->db->prepare('INSERT IGNORE INTO artist_folder_users (folder_id, user_id) SELECT :folder_id, id FROM users WHERE id = :user_id AND is_validated = 1');
-        $result = $stmt->execute(['folder_id' => $folderId, 'user_id' => $userId]);
-        $enable = $this->db->prepare('UPDATE users SET access_artist = 1 WHERE id = :user_id AND is_validated = 1');
-        $enable->execute(['user_id' => $userId]);
-        return $result;
-    }
-
     public function getFoldersForUser(int $userId): array {
-        $stmt = $this->db->prepare('SELECT af.* FROM artist_folders af JOIN artist_space_users asu ON asu.space_id = af.space_id WHERE asu.user_id = :user_id ORDER BY af.name');
-        $stmt->execute(['user_id' => $userId]);
+        // Acces via une liaison directe au dossier OU via l'espace parent (racine).
+        $stmt = $this->db->prepare('SELECT af.* FROM artist_folders af
+            WHERE af.id IN (SELECT folder_id FROM artist_folder_users WHERE user_id = :user_id1)
+               OR af.space_id IN (SELECT space_id FROM artist_space_users WHERE user_id = :user_id2)
+            ORDER BY af.name');
+        $stmt->execute(['user_id1' => $userId, 'user_id2' => $userId]);
         return $stmt->fetchAll();
     }
 
     public function userCanAccessFolder(int $userId, int $folderId): bool {
-        $stmt = $this->db->prepare('SELECT 1 FROM artist_space_users asu JOIN artist_folders af ON af.space_id = asu.space_id WHERE asu.user_id = :user_id AND af.id = :folder_id LIMIT 1');
-        $stmt->execute(['user_id' => $userId, 'folder_id' => $folderId]);
+        $stmt = $this->db->prepare('SELECT 1 FROM artist_folders af
+            WHERE af.id = :folder_id
+              AND (EXISTS (SELECT 1 FROM artist_folder_users afu WHERE afu.folder_id = af.id AND afu.user_id = :user_id1)
+                   OR EXISTS (SELECT 1 FROM artist_space_users asu WHERE asu.space_id = af.space_id AND asu.user_id = :user_id2))
+            LIMIT 1');
+        $stmt->execute(['folder_id' => $folderId, 'user_id1' => $userId, 'user_id2' => $userId]);
         return (bool)$stmt->fetchColumn();
     }
 
@@ -179,7 +179,7 @@ class ArtistSpace extends Model {
     }
 
     public function getFolderUsers(int $folderId): array {
-        $stmt = $this->db->prepare('SELECT u.id, u.fullname, u.email FROM artist_space_users asu JOIN artist_folders af ON af.space_id = asu.space_id JOIN users u ON u.id = asu.user_id WHERE af.id = :folder_id ORDER BY u.fullname');
+        $stmt = $this->db->prepare('SELECT u.id, u.fullname, u.email FROM artist_folder_users afu JOIN users u ON u.id = afu.user_id WHERE afu.folder_id = :folder_id ORDER BY u.fullname');
         $stmt->execute(['folder_id' => $folderId]);
         return $stmt->fetchAll();
     }
