@@ -1,9 +1,19 @@
--- La base existante contient deja le schema artiste:
--- users.access_student/access_artist, artist_spaces, artist_space_users,
--- artist_folders et artist_tracks.
+-- Compatible MySQL 8 et MariaDB. Idempotente : peut etre executee plusieurs fois.
 
-ALTER TABLE artist_spaces ADD COLUMN IF NOT EXISTS google_folder_id VARCHAR(255) NULL AFTER name;
-ALTER TABLE artist_spaces ADD INDEX IF NOT EXISTS idx_artist_space_google_folder_id (google_folder_id);
+-- 1. Colonne google_folder_id sur artist_spaces (conditionnee en SQL portable).
+SET @col_exists := (SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'artist_spaces' AND COLUMN_NAME = 'google_folder_id');
+SET @ddl := IF(@col_exists = 0,
+    'ALTER TABLE artist_spaces ADD COLUMN google_folder_id VARCHAR(255) NULL AFTER name',
+    'SELECT 1');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @idx_exists := (SELECT COUNT(*) FROM information_schema.STATISTICS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'artist_spaces' AND INDEX_NAME = 'idx_artist_space_google_folder_id');
+SET @ddl := IF(@idx_exists = 0,
+    'ALTER TABLE artist_spaces ADD INDEX idx_artist_space_google_folder_id (google_folder_id)',
+    'SELECT 1');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 CREATE TABLE IF NOT EXISTS google_drive_tokens (
     id TINYINT UNSIGNED NOT NULL PRIMARY KEY,
@@ -34,24 +44,11 @@ CREATE TABLE IF NOT EXISTS artist_folder_users (
     CONSTRAINT fk_artist_folder_users_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Migration des droits par espace vers les droits par dossier.
+-- Les liaisons artist_space_users existantes sont conservees (elles donnent
+-- acces a la racine) et chaque utilisateur d'un espace recoit aussi les
+-- dossiers de cet espace.
 INSERT IGNORE INTO artist_folder_users (folder_id, user_id)
 SELECT af.id, asu.user_id
 FROM artist_folders af
 JOIN artist_space_users asu ON asu.space_id = af.space_id;
-
--- Les droits sont maintenant geres par dossier, cette ancienne liaison est obsolete.
-DELETE FROM artist_space_users;
-
-UPDATE users u
-LEFT JOIN (SELECT DISTINCT user_id FROM artist_folder_users) f ON f.user_id = u.id
-SET u.access_artist = IF(f.user_id IS NULL, 0, 1)
-WHERE u.role = 'student';
-
--- Les anciens droits par dossier deviennent des droits sur la racine correspondante.
-INSERT IGNORE INTO artist_space_users (space_id, user_id)
-SELECT DISTINCT af.space_id, afu.user_id
-FROM artist_folder_users afu
-JOIN artist_folders af ON af.id = afu.folder_id
-WHERE af.space_id IS NOT NULL;
-
-DELETE FROM artist_folder_users;

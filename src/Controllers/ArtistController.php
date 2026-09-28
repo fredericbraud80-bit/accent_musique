@@ -73,12 +73,22 @@ class ArtistController extends Controller {
             http_response_code(404);
             return;
         }
-        $url = (new GoogleDrive())->getDownloadUrl($fileId);
-        if (!$url) {
-            http_response_code(404);
-            return;
+        $download = (new GoogleDrive())->downloadFile($fileId);
+        while (ob_get_level()) {
+            ob_end_clean();
         }
-        header('Location: ' . $url);
+
+        header('Content-Type: ' . $download['mime_type']);
+        header('Content-Disposition: attachment; filename="' . basename($download['name']) . '"');
+        header('X-Content-Type-Options: nosniff');
+        if (is_numeric($download['size'])) {
+            header('Content-Length: ' . (int)$download['size']);
+        }
+
+        $body = $download['body'];
+        while (!$body->eof()) {
+            echo $body->read(8192);
+        }
         exit;
     }
 }

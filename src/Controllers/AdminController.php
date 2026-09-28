@@ -321,6 +321,43 @@ public function artistManagement(): void {
     $this->redirect('/admin');
 }
 
+/**
+ * Inviter un artiste : crée le compte (validé, accès artiste) et envoie l'email d'invitation
+ */
+public function inviteArtist(): void {
+    $fullname = trim((string)($_POST['fullname'] ?? ''));
+    $email = trim((string)($_POST['email'] ?? ''));
+
+    if ($fullname === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        Session::setFlash('error', 'Nom/prénom et email valide sont requis.');
+        $this->redirect('/admin');
+    }
+
+    if ($this->userModel->findByEmail($email) !== null) {
+        Session::setFlash('error', 'Un compte existe déjà avec cet email.');
+        $this->redirect('/admin');
+    }
+
+    if (!$this->userModel->createInvitedArtist($fullname, $email)) {
+        Session::setFlash('error', 'Erreur lors de la création du compte artiste.');
+        $this->redirect('/admin');
+    }
+
+    // Lien direct de définition du mot de passe (valide 48 h)
+    $rawToken = bin2hex(random_bytes(32));
+    $this->userModel->createPasswordReset($email, hash('sha256', $rawToken), 48 * 60);
+    $setPasswordUrl = BASE_URL . '/reset-password?token=' . urlencode($rawToken);
+
+    $emailSent = (new Mailer())->sendArtistInvitation($email, $fullname, $setPasswordUrl);
+    if ($emailSent) {
+        Session::setFlash('success', "Le compte artiste de {$fullname} a été créé et l'invitation envoyée à {$email}.");
+    } else {
+        Session::setFlash('error', "Le compte de {$fullname} a été créé, mais l'email d'invitation n'a pas pu être envoyé.");
+    }
+
+    $this->redirect('/admin');
+}
+
 public function updateSpaces(int $id): void {
     $user = $this->userModel->findById($id);
     if (!$user) {

@@ -31,6 +31,25 @@ class User extends Model {
         ]);
     }
 
+    /**
+     * Créer un compte artiste invité par l'admin : validé directement,
+     * accès artiste activé, accès élève désactivé, mot de passe aléatoire
+     * (l'artiste utilise la réinitialisation de mot de passe pour le définir).
+     */
+    public function createInvitedArtist(string $fullname, string $email): bool {
+        $randomPassword = bin2hex(random_bytes(16));
+        $stmt = $this->db->prepare("
+            INSERT INTO users (fullname, email, password_hash, role, is_validated, access_student, access_artist,
+                license_issued_at, license_expires_at, is_license_active, created_at)
+            VALUES (:fullname, :email, :hash, 'student', 1, 0, 1, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR), 1, NOW())
+        ");
+        return $stmt->execute([
+            'fullname' => $fullname,
+            'email'    => $email,
+            'hash'     => password_hash($randomPassword, PASSWORD_DEFAULT),
+        ]);
+    }
+
     private static bool $passwordResetsTableChecked = false;
 
     private function ensurePasswordResetsTable(): void {

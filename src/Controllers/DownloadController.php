@@ -21,8 +21,9 @@ class DownloadController extends Controller {
             return null;
         }
 
-        $baseDir = realpath(STORAGE_PATH);
-        $fullPath = realpath(STORAGE_PATH . $file['stored_name']);
+        $storagePath = rtrim(STORAGE_PATH, "/\\") . DIRECTORY_SEPARATOR;
+        $baseDir = realpath($storagePath);
+        $fullPath = realpath($storagePath . ltrim((string)$file['stored_name'], "/\\"));
 
         if ($baseDir === false || $fullPath === false) {
             return null;
@@ -41,7 +42,10 @@ class DownloadController extends Controller {
             'video/mp4'
         ];
 
-        $mimeType = mime_content_type($fullPath);
+        $mimeType = function_exists('mime_content_type') ? mime_content_type($fullPath) : null;
+        if ($this->isPdfFile($fullPath)) {
+            $mimeType = 'application/pdf';
+        }
         if (!is_string($mimeType) || !in_array($mimeType, $allowedMimeTypes, true)) {
             return null;
         }
@@ -51,9 +55,21 @@ class DownloadController extends Controller {
         return $file;
     }
 
+    private function isPdfFile(string $path): bool {
+        $handle = @fopen($path, 'rb');
+        if ($handle === false) {
+            return false;
+        }
+
+        $signature = fread($handle, 5);
+        fclose($handle);
+
+        return $signature === '%PDF-';
+    }
+
     private function safeDownloadName(string $originalName): string {
         $name = basename($originalName);
-        $name = preg_replace("/[\x00-\x1F\x7F\"\\\\]/", '_', $name) ?: 'download';
+        $name = preg_replace('/[\x00-\x1F\x7F"\\\\]/', '_', $name) ?: 'download';
 
         return $name;
     }
@@ -67,6 +83,15 @@ class DownloadController extends Controller {
             throw new \RuntimeException('Fichier introuvable.');
         }
 
+        $handle = @fopen($file['path'], 'rb');
+        if ($handle === false) {
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
+            http_response_code(500);
+            throw new \RuntimeException('Le fichier existe mais ne peut pas être lu par le serveur.');
+        }
+
         if (ob_get_level()) {
             ob_end_clean();
         }
@@ -74,12 +99,12 @@ class DownloadController extends Controller {
         header('Content-Description: File Transfer');
         header('Content-Type: ' . $file['mime_type']);
         header('Content-Disposition: attachment; filename="' . $this->safeDownloadName((string)$file['original_name']) . '"');
-        header('Content-Length: ' . filesize($file['path']));
         header('X-Content-Type-Options: nosniff');
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Pragma: no-cache');
 
-        readfile($file['path']);
+        fpassthru($handle);
+        fclose($handle);
         exit;
     }
 
@@ -92,16 +117,25 @@ class DownloadController extends Controller {
             throw new \RuntimeException('Fichier introuvable.');
         }
 
+        $handle = @fopen($file['path'], 'rb');
+        if ($handle === false) {
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
+            http_response_code(500);
+            throw new \RuntimeException('Le fichier existe mais ne peut pas être lu par le serveur.');
+        }
+
         if (ob_get_level()) {
             ob_end_clean();
         }
 
         header('Content-Type: ' . $file['mime_type']);
         header('Content-Disposition: inline; filename="' . $this->safeDownloadName((string)$file['original_name']) . '"');
-        header('Content-Length: ' . filesize($file['path']));
         header('X-Content-Type-Options: nosniff');
 
-        readfile($file['path']);
+        fpassthru($handle);
+        fclose($handle);
         exit;
     }
 }
