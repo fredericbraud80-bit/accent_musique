@@ -20,10 +20,14 @@ use Core\Security;
 
             <input type="hidden" name="csrf_token" value="<?= Security::generateCsrfToken() ?>">
 
-            <!-- Nom complet -->
+            <!-- Prénom / Nom -->
             <div class="form-group">
-                <label class="form-label">Nom complet</label>
-                <input type="text" name="fullname" class="form-control" required>
+                <label class="form-label">Prénom</label>
+                <input type="text" name="prenom" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nom</label>
+                <input type="text" name="nom" class="form-control" required>
             </div>
 
             <!-- Email -->

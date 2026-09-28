@@ -20,6 +20,11 @@ use Core\Security;
         <div class="book-reader-stage" id="bookReaderStage" aria-live="polite">
             <div class="book-reader-track" id="bookReaderTrack"></div>
 
+            <div class="book-reader-loading" id="bookReaderLoading" aria-hidden="false">
+                <div class="book-reader-loading-spinner"></div>
+                <p class="book-reader-loading-text">Chargement du PDF…</p>
+            </div>
+
             <button type="button" class="book-reader-arrow book-reader-arrow-left" id="bookArrowLeftBtn" aria-label="Page précédente">‹</button>
             <button type="button" class="book-reader-arrow book-reader-arrow-right" id="bookArrowRightBtn" aria-label="Page suivante">›</button>
 
@@ -28,7 +33,7 @@ use Core\Security;
                 <button type="button" class="book-reader-control book-reader-control--active" id="bookZoomResetBtn" aria-label="Réinitialiser le zoom">100%</button>
                 <button type="button" class="book-reader-control" id="bookZoomInBtn" aria-label="Augmenter le zoom">＋</button>
                 <span class="fullscreen-page-info" id="fullscreenPageInfo">Page 1 / 1</span>
-                
+
                 <button type="button" class="btn btn-primary-small" id="bookFullscreenBtn" title="Plein écran">⛶</button>
             </div>
         </div>
@@ -36,7 +41,7 @@ use Core\Security;
         <div class="book-reader-toolbar book-reader-toolbar-bottom">
             <button type="button" class="btn btn-danger-outline" id="bookPrevBtn">← Précédente</button>
             <span class="page-subtitle" id="bookPageInfo">Page 1 / 1</span>
-            
+
             <button type="button" class="btn btn-primary" id="bookNextBtn">Suivante →</button>
             <button type="button" class="btn btn-primary" id="bookFullscreenBtnBottom">Plein écran</button>
         </div>
@@ -78,6 +83,7 @@ use Core\Security;
             const pdfUrl = '<?= BASE_URL ?>/files/<?= (int)$course['file_id'] ?>/preview';
             const track = document.getElementById('bookReaderTrack');
             const stage = document.getElementById('bookReaderStage');
+            const loadingIndicator = document.getElementById('bookReaderLoading');
             const pageInfo = document.getElementById('bookPageInfo');
             const prevBtn = document.getElementById('bookPrevBtn');
             const nextBtn = document.getElementById('bookNextBtn');
@@ -207,8 +213,23 @@ use Core\Security;
                 return false;
             }
 
+            function hideLoading() {
+                if (loadingIndicator) {
+                    loadingIndicator.classList.add('done');
+                    loadingIndicator.setAttribute('aria-hidden', 'true');
+                }
+            }
+
+            function showLoading() {
+                if (loadingIndicator) {
+                    loadingIndicator.classList.remove('done');
+                    loadingIndicator.setAttribute('aria-hidden', 'false');
+                }
+            }
+
             function renderPage(pageNumber) {
                 if (!pdfDoc) return;
+                showLoading();
 
                 const pageLinks = (bookLinks || []).filter(function (link) {
                     return Number(link.page_number ?? link.page ?? 0) === Number(pageNumber);
@@ -239,24 +260,33 @@ use Core\Security;
                     const fitScale = Math.min(widthAvailable / baseViewport.width, heightAvailable / baseViewport.height, 2.25);
                     const isMobile = window.innerWidth <= 768;
 
-                    const pageScale = stage.classList.contains('fullscreen')
+                    // Échelle CSS : la taille d'affichage souhaitée
+                    // (mobile : pleine largeur d'écran)
+                    let cssScale = stage.classList.contains('fullscreen')
                         ? Math.min(Math.max(fitScale * zoom, 0.5), maxZoom)
-                        : (isMobile ? 0.5 : 1.0);
+                        : (isMobile ? fitScale : 1.0);
 
-                    const viewport = page.getViewport({ scale: pageScale, rotation: 0 });
+                    // Sur mobile, rendu haute résolution : bitmap beaucoup plus grand
+                    // que l'affichage, pour que le zoom par pincement (pinch-zoom)
+                    // reste net.
+                    const dpr = window.devicePixelRatio || 1;
+                    const renderScale = isMobile ? cssScale * Math.min(dpr * 2, 4) : cssScale;
+
+                    const viewport = page.getViewport({ scale: renderScale, rotation: 0 });
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
                     canvas.width = viewport.width;
                     canvas.height = viewport.height;
-                    canvas.style.width = viewport.width + 'px';
-                    canvas.style.height = viewport.height + 'px';
+                    canvas.style.width = Math.round(baseViewport.width * cssScale) + 'px';
+                    canvas.style.height = Math.round(baseViewport.height * cssScale) + 'px';
                     canvas.style.display = 'block';
                     canvas.style.maxWidth = 'none';
+                    canvas.style.imageRendering = 'auto';
 
                     const pageWrapper = document.createElement('div');
                     pageWrapper.className = 'book-reader-page';
-                    pageWrapper.style.width = Math.min(viewport.width, Math.max(220, stage.clientWidth - 24)) + 'px';
-                    pageWrapper.style.height = viewport.height + 'px';
+                    pageWrapper.style.width = Math.min(Math.round(baseViewport.width * cssScale), Math.max(220, stage.clientWidth - 24)) + 'px';
+                    pageWrapper.style.height = Math.round(baseViewport.height * cssScale) + 'px';
                     pageWrapper.style.maxWidth = '100%';
                     pageWrapper.style.overflow = 'visible';
                     pageWrapper.style.margin = '0 auto';
@@ -266,6 +296,7 @@ use Core\Security;
                     track.appendChild(pageWrapper);
 
                     page.render({ canvasContext: context, viewport: viewport }).promise.then(function () {
+                        hideLoading();
                         if (pageLinks.length) {
                             const floatingBar = document.createElement('div');
                             floatingBar.className = 'book-link-actions';
@@ -363,6 +394,7 @@ use Core\Security;
                 goToPage(currentPage);
                 updateBookmarkButtons();
             }).catch(function () {
+                hideLoading();
                 track.innerHTML = '<div class="book-reader-page empty">Le PDF ne peut pas être ouvert pour le moment.</div>';
             });
         });

@@ -53,6 +53,8 @@ class AuthController extends Controller {
         Session::regenerate();
         Session::set('user_id', (int)$user['id']);
         Session::set('user_name', $user['fullname']);
+        $fullnameParts = explode(' ', trim((string)$user['fullname']), 2);
+        Session::set('user_firstname', $fullnameParts[0]);
         Session::set('user_role', $user['role']);
         Session::set('csrf_token', bin2hex(random_bytes(32)));
         Session::set('user_access_student', (int)($user['access_student'] ?? 0) === 1);
@@ -71,7 +73,9 @@ class AuthController extends Controller {
     }
 
     public function register(): void {
-        $fullname = trim((string)($_POST['fullname'] ?? ''));
+        $prenom = trim((string)($_POST['prenom'] ?? ''));
+        $nom = trim((string)($_POST['nom'] ?? ''));
+        $fullname = trim($prenom . ' ' . $nom);
         $email = trim((string)($_POST['email'] ?? ''));
         $password = (string)($_POST['password'] ?? '');
         $confirm = (string)($_POST['password_confirm'] ?? '');

@@ -3,7 +3,10 @@ use Core\Security;
 ?>
 
 <?php 
-$username = \Core\Security::sanitize(\Core\Session::get('user_name'));
+$username = \Core\Security::sanitize(\Core\Session::get('user_firstname'));
+if ($username === '') {
+    $username = \Core\Security::sanitize(\Core\Session::get('user_name'));
+}
 $user['license_expires_at'] = Core\Session::get('user_license_expires_at');
 // Renommage des catégories
 $displayNames = [
